@@ -237,6 +237,7 @@ class SignalBot:
         logging.info(f"[Bot] {len(self.groups)} groups detected")
 
     def _resolve_receiver(self, receiver: str) -> str:
+        logging.info(f"[Bot] Receiver: {receiver}")
         if self._is_phone_number(receiver):
             return receiver
 
