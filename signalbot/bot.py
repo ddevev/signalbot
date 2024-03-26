@@ -3,6 +3,7 @@ from collections import defaultdict
 import time
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import logging
+import uuid
 import traceback
 from typing import Optional, Union, List, Callable
 import re
@@ -236,8 +237,12 @@ class SignalBot:
 
         logging.info(f"[Bot] {len(self.groups)} groups detected")
 
+            
     def _resolve_receiver(self, receiver: str) -> str:
         logging.info(f"[Bot] Receiver: {receiver}")
+        if self._is_valid_uuid(receiver):
+            return receiver
+
         if self._is_phone_number(receiver):
             return receiver
 
@@ -250,6 +255,13 @@ class SignalBot:
 
         except Exception:
             raise SignalBotError(f"Cannot resolve receiver.")
+
+    def _is_valid_uuid(self, val: str) -> bool:
+        try:
+            uuid.UUID(str(val))
+            return True
+        except ValueError:
+            return False
 
     def _is_phone_number(self, phone_number: str) -> bool:
         if phone_number is None:
